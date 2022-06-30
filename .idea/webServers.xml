@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="1993c53b-ae24-482d-82d5-4207e0aee111" name="prod@avito">
+        <fileTransfer accessType="SFTP" host="45.10.246.54" port="22" sshConfigId="c517c583-627d-47a2-b725-53d4d93941dc" sshConfig="root@45.10.246.54:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
