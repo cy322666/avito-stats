@@ -3,14 +3,14 @@
 namespace App\Console\Commands;
 
 use App\Models\Account;
-use App\Models\Ads;
+use App\Models\Ads as Model;
 use App\Services\Avito\ApiClient;
 use Avito\RestApi\Storage\FileStorage;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class GetAds extends Command
+class Ads extends Command
 {
     /**
      * The name and signature of the console command.
@@ -32,8 +32,10 @@ class GetAds extends Command
      * @return int
      * @throws Exception
      */
-    public function handle()
+    public function handle(): int
     {
+        Log::info(__METHOD__.' > start');
+
         $account = Account::query()->first();
 
         $apiClient = new ApiClient(
@@ -49,7 +51,7 @@ class GetAds extends Command
                 foreach ($adsCollection->data->resources as $ads) {
 
                     try {
-                        Ads::query()
+                        Model::query()
                             ->create([
                                 'account_id' => $account->account_id,
                                 'ads_id' => (integer)$ads->id,
@@ -66,7 +68,10 @@ class GetAds extends Command
                     }
                 }
             } else
-                return 0;
+                break;
         }
+        Log::info(__METHOD__.' > end');
+
+        return 0;
     }
 }
