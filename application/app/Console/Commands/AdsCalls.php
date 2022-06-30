@@ -8,6 +8,7 @@ use App\Services\Avito\ApiClient;
 use Avito\RestApi\Storage\FileStorage;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class AdsCalls extends Command
 {
@@ -33,6 +34,8 @@ class AdsCalls extends Command
      */
     public function handle()
     {
+        Log::info(__METHOD__.' > start');
+
         $account = Account::query()->first();
 
         $apiClient = new ApiClient(
@@ -82,6 +85,8 @@ class AdsCalls extends Command
                     ]);
             }
         }
+        Log::info(__METHOD__.' > end');
+
         return 0;
     }
 }

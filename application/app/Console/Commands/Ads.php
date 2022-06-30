@@ -6,6 +6,7 @@ use App\Models\Account;
 use App\Models\Ads as Model;
 use App\Services\Avito\ApiClient;
 use Avito\RestApi\Storage\FileStorage;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -36,7 +37,11 @@ class Ads extends Command
     {
         Log::info(__METHOD__.' > start');
 
-        $account = Account::query()->first();
+        $today = Carbon::now()->format('Y-m-d');
+
+        $account = Account::query()
+            ->where('last_update', '!=', $today)
+            ->first();
 
         $apiClient = new ApiClient(
             $account->client_id,
@@ -71,6 +76,9 @@ class Ads extends Command
                 break;
         }
         Log::info(__METHOD__.' > end');
+
+        $account->last_update = $today;
+        $account->save();
 
         return 0;
     }

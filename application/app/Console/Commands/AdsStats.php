@@ -2,11 +2,13 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Account;
 use App\Models\Ads;
 use App\Services\Avito\ApiClient;
 use Avito\RestApi\Storage\FileStorage;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class AdsStats extends Command
 {
@@ -30,11 +32,15 @@ class AdsStats extends Command
      * @return int
      * @throws \Exception
      */
-    public function handle()
+    public function handle(): int
     {
+        Log::info(__METHOD__.' > start');
+
+        $account = Account::query()->first();
+
         $apiClient = new ApiClient(
-            env('API_CLIENT_ID2'),
-            env('API_CLIENT_SECRET2'),
+            $account->client_id,
+            $account->token,
             new FileStorage(storage_path())
         );
 
@@ -74,5 +80,8 @@ class AdsStats extends Command
                     ]);
             }
         }
+        Log::info(__METHOD__.' > end');
+
+        return 0;
     }
 }

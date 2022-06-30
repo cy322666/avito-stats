@@ -34,6 +34,8 @@ class AdsServices extends Command
      */
     public function handle()
     {
+        Log::info(__METHOD__.' > start');
+
         $account = Account::query()->first();
 
         $apiClient = new ApiClient(
@@ -45,8 +47,8 @@ class AdsServices extends Command
         $today = Carbon::now()->format('Y-m-d');
 
         $adIds = Ads::query()
-//            ->where('services_updated_at', '<', $today)
-//            ->orWhere('services_updated_at', null)
+            ->where('services_updated_at', '<', $today)
+            ->orWhere('services_updated_at', null)
             ->limit(300)
             ->pluck('ads_id')
             ->toArray();
@@ -56,7 +58,7 @@ class AdsServices extends Command
             foreach ($adIds as $adId) {
 
                 $data = $apiClient->adsServices($account->account_id, $adId);
-print_r($data->data);
+;
                 $services = $data->data->vas;
 
                 if (count($services) > 0) {
@@ -86,6 +88,8 @@ print_r($data->data);
                     ]);
             }
         }
+        Log::info(__METHOD__.' > end');
+
         return 0;
     }
 }
