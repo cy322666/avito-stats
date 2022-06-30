@@ -46,7 +46,7 @@ class Ads extends Command
         $apiClient = new ApiClient(
             $account->client_id,
             $account->token,
-            new FileStorage(storage_path())
+            new FileStorage('/storage/avito/')
         );
 
         foreach ($apiClient->adsAll() as $adsCollection) {

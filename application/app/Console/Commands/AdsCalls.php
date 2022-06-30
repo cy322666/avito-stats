@@ -36,15 +36,19 @@ class AdsCalls extends Command
     {
         Log::info(__METHOD__.' > start');
 
-        $account = Account::query()->first();
+        $today = Carbon::now()->format('Y-m-d');
+
+        $account = Ads::query()
+            ->where('account_id', Account::query()->first()->account_id)
+            ->where('calls_updated_at', '!=', $today)
+            ->first()
+            ?? Account::query()->find(2);
 
         $apiClient = new ApiClient(
             $account->client_id,
             $account->token,
-            new FileStorage(storage_path())
+            new FileStorage('/storage/avito/')
         );
-
-        $today = Carbon::now()->format('Y-m-d');
 
         $adIds = Ads::query()
             ->where('calls_updated_at', '<', $today)
