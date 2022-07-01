@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('ads_stats', function (Blueprint $table) {
 
-            $table->dropColumn('ads_id');
+            $table->dropColumn(['ads_id']);
 
             $table->string('ads_id')->unique();
         });
