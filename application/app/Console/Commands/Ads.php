@@ -44,7 +44,12 @@ class Ads extends Command
             ->orWhere('last_update', null)
             ->first();
 
-        if (!$account) return 1;
+        if (!$account) {
+
+            Log::info(__METHOD__.' > end > no account');
+
+            return 1;
+        }
 
         Log::info(__METHOD__.' > account id : '.$account->id);
 
