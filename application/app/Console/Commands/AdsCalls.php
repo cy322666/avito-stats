@@ -54,7 +54,7 @@ class AdsCalls extends Command
             ->where('calls_updated_at', '!=', $today)
             ->orWhere('calls_updated_at', null)
             ->where('account_id', $account->account_id)
-            ->limit(50)
+            ->limit(100)
             ->pluck('ads_id')
             ->toArray();
 
