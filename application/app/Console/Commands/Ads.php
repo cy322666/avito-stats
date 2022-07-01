@@ -43,6 +43,8 @@ class Ads extends Command
             ->where('last_update', '!=', $today)
             ->first();
 
+        Log::info(__METHOD__.' > account id : '.$account->id);
+
         $apiClient = new ApiClient(
             $account->client_id,
             $account->token,
