@@ -53,13 +53,14 @@ class AdsCalls extends Command
         $adIds = Ads::query()
             ->where('calls_updated_at', '!=', $today)
             ->orWhere('calls_updated_at', null)
-            ->limit(100)
+            ->where('account_id', $account->account_id)
+            ->limit(50)
             ->pluck('ads_id')
             ->toArray();
 
         if ($adIds) {
 
-            for ($i = 0; $i < count($adIds); $i++, sleep(1)) {
+            for ($i = 0; $i < count($adIds); $i++) {
 
                 $items = $apiClient->adsCalls($account->account_id, [$adIds[$i]], [
                     'date_from' => Carbon::now()->subDays(180)->format('Y-m-d'),

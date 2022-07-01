@@ -53,7 +53,8 @@ class AdsServices extends Command
         $adIds = Ads::query()
             ->where('services_updated_at', '<', $today)
             ->orWhere('services_updated_at', null)
-            ->limit(300)
+            ->where('account_id', $account->account_id)
+            ->limit(50)
             ->pluck('ads_id')
             ->toArray();
 

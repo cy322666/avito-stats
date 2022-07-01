@@ -70,14 +70,20 @@ class AdsStats extends Command
 
                 foreach ($items->stats as $details) {
 
-                    \App\Models\AdsStats::query()
-                        ->create([
-                            'ads_id' => $items->itemId,
-                            'date'   => $details->date,
-                            'uniq_views'     => $details->uniqViews,
-                            'uniq_contacts'  => $details->uniqContacts,
-                            'uniq_favorites' => $details->uniqFavorites,
-                        ]);
+                    $double = \App\Models\AdsStats::query()
+                        ->where('ads_id', $items->itemId)
+                        ->where('date', $details->date)
+                        ->first();
+
+                    if (!$double)
+                        \App\Models\AdsStats::query()
+                            ->create([
+                                'ads_id' => $items->itemId,
+                                'date'   => $details->date,
+                                'uniq_views'     => $details->uniqViews,
+                                'uniq_contacts'  => $details->uniqContacts,
+                                'uniq_favorites' => $details->uniqFavorites,
+                            ]);
                 }
                 Ads::query()
                     ->where('ads_id', $items->itemId)
