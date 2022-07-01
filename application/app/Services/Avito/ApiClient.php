@@ -20,6 +20,7 @@ use Avito\RestApi\Service\MessengerService;
 use Exception;
 use Avito\RestApi\Storage\FileStorage;
 use Avito\RestApi\Storage\TokenStorageInterface;
+use Illuminate\Support\Facades\Cache;
 
 class ApiClient
 {
@@ -37,7 +38,10 @@ class ApiClient
      *
      * @throws Exception
      */
-    public function __construct(string $clientId, string $secret, TokenStorageInterface $tokenStorage = null)
+    public function __construct(
+        private string $clientId,
+        private string $secret,
+        TokenStorageInterface $tokenStorage = null)
     {
         $this->httpСlient = new Client($clientId, $secret, $tokenStorage);
 
@@ -46,7 +50,11 @@ class ApiClient
 
     public function adsAll(): \Generator
     {
-        for($i = 1 ; ; $i++) {
+        $page = Cache::get('page_ads_'.$this->clientId);
+
+        for($i = $page ?? 1 ; ; $i++) {
+
+            Cache::put('page_ads_'.$this->clientId, $i);
 
             yield $this->httpСlient->sendRequest('core/v1/items', 'GET', [
                 'per_page' => 100,
