@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:postgresql://localhost:5431/avito</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="avito@prod" uuid="00a5a75f-2bf6-41ca-aa1a-cd57dd82f13c">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://45.10.246.54:5431/avito</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

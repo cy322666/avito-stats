@@ -47,7 +47,7 @@ class AdsStats extends Command
         $apiClient = new ApiClient(
             $account->client_id,
             $account->token,
-            new FileStorage('/storage/avito/')
+            new FileStorage(storage_path('/storage/avito/'))
         );
 
         $adIds = Ads::query()

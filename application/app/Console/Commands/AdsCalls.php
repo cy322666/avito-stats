@@ -47,7 +47,7 @@ class AdsCalls extends Command
         $apiClient = new ApiClient(
             $account->client_id,
             $account->token,
-            new FileStorage('/storage/avito/')
+            new FileStorage(storage_path('/storage/avito/'))
         );
 
         $adIds = Ads::query()
@@ -66,7 +66,6 @@ class AdsCalls extends Command
                     'date_to'   => Carbon::now()->format('Y-m-d'),
                 ])->data->result->items[0];
 
-                print_r($items);
                 if (!empty($items->days)) {
 
                     foreach ($items->days as $details) {
