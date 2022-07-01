@@ -51,7 +51,7 @@ class AdsCalls extends Command
         );
 
         $adIds = Ads::query()
-            ->where('calls_updated_at', '<', $today)
+            ->where('calls_updated_at', '!=', $today)
             ->orWhere('calls_updated_at', null)
             ->limit(100)
             ->pluck('ads_id')
