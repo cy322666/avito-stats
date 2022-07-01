@@ -41,6 +41,7 @@ class Ads extends Command
 
         $account = Account::query()
             ->where('last_update', '!=', $today)
+            ->orWhere('last_update', null)
             ->first();
 
         Log::info(__METHOD__.' > account id : '.$account->id);
