@@ -9,6 +9,8 @@ class AdsCalls extends Model
 {
     use HasFactory;
 
+    protected $table = 'ads_calls';
+
     protected $fillable = [
         "answered",
         "calls",

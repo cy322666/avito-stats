@@ -9,6 +9,8 @@ class AdsServices extends Model
 {
     use HasFactory;
 
+    protected $table = 'ads_services';
+
     protected $fillable = [
         'finish_time',
         'schedule',
