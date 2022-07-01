@@ -60,7 +60,7 @@ class AdsStats extends Command
 
         if ($adIds) {
 
-            $stats = $apiClient->adsStats(env('API_USER_ID2'), $adIds, [
+            $stats = $apiClient->adsStats($account->account_id, $adIds, [
                 'date_from' => Carbon::now()->subDays(269)->format('Y-m-d'),
                 'date_to'   => Carbon::now()->format('Y-m-d'),
             ]);
