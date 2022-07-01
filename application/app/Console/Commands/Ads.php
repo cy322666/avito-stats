@@ -44,6 +44,8 @@ class Ads extends Command
             ->orWhere('last_update', null)
             ->first();
 
+        if (!$account) return 1;
+
         Log::info(__METHOD__.' > account id : '.$account->id);
 
         $apiClient = new ApiClient(

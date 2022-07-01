@@ -47,12 +47,13 @@ class AdsStats extends Command
         $apiClient = new ApiClient(
             $account->client_id,
             $account->token,
-            new FileStorage(storage_path('/storage/avito/'))
+            new FileStorage(storage_path('avito/'))
         );
 
         $adIds = Ads::query()
             ->where('stats_updated_at', '<', $today)
             ->orWhere('stats_updated_at', null)
+            ->where('account_id', $account->account_id)
             ->limit(200)
             ->pluck('ads_id')
             ->toArray();
