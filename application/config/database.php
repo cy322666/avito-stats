@@ -77,6 +77,20 @@ return [
             'search_path' => 'public',
             'sslmode' => 'prefer',
         ],
+        'sipout' => [
+            'driver' => 'pgsql',
+            'url' => env('DATABASE_URL'),
+            'host' => 'postgresql_sipout',
+            'port' => 5432,
+            'database' => 'sipout',
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => 'public',
+            'sslmode' => 'prefer',
+        ],
 
         'sqlsrv' => [
             'driver' => 'sqlsrv',
@@ -92,7 +106,6 @@ return [
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
-
     ],
 
     /*
