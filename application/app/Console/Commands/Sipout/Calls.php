@@ -70,6 +70,8 @@ class Calls extends Command
             } catch (\Exception $exception) {
 
                 Log::alert(__METHOD__.' : '.$exception->getMessage());
+
+                continue;
             }
         }
 
