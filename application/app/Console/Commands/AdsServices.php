@@ -73,7 +73,8 @@ class AdsServices extends Command
                         try {
 
                             if (\App\Models\AdsServices::query()
-                                ->where('ads_id'. $adId)
+                                ->where('ads_id', $adId)
+                                ->where('vas_id', '!=', $service->vas_id)
                                 ->where('finish_time', '!=', $service->finish_time)
                                 ->first()) {
 
