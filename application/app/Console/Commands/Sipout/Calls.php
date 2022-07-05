@@ -76,10 +76,13 @@ class Calls extends Command
         $latestDate = DB::connection('sipout')
             ->table('sipout_calls')
             ->latest('id')
-            ->first()
-            ->date;
+            ->first();
 
-        $latestDate = $latestDate = explode(' ', $latestDate)[0];
+        if ($latestDate) {
+            $latestDate = explode(' ', $latestDate->date)[0];
+        } else {
+            $latestDate = Cache::get('sipout_date_to') ?? $dateTo;
+        }
 
         Cache::put('sipout_date_from', $latestDate);
         Cache::put('sipout_date_to', Carbon::parse($latestDate)->addMonth()->format('d.m.Y'));
