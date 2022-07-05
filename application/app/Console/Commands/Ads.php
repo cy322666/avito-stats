@@ -40,6 +40,7 @@ class Ads extends Command
         $today = Carbon::now()->format('Y-m-d');
 
         $account = Account::query()
+            ->where('name', 'avito')
             ->where('last_update', '!=', $today)
             ->orWhere('last_update', null)
             ->first();
