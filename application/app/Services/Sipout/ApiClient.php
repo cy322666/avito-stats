@@ -28,6 +28,8 @@ class ApiClient
                 ],
         ]);
 
-        return json_decode($response->getBody()->getContents())->data->list;
+        $response = json_decode($response->getBody()->getContents());
+
+        return $response->data->list ?? [];
     }
 }
