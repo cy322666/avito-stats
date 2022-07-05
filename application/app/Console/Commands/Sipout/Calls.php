@@ -6,7 +6,9 @@ use App\Models\Account;
 use App\Services\Sipout\ApiClient;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Calls extends Command
 {
@@ -36,14 +38,19 @@ class Calls extends Command
             ->first()
                 ->token;
 
+        $dateFrom = Cache::get('sipout_date_from') ?? Carbon::create('2020', '01', '01')->format('d.m.Y');
+        $dateTo   = Cache::get('sipout_date_to') ?? Carbon::create('2020', '02', '01')->format('d.m.Y');
+
+        Log::info(__METHOD__.' > date_from : '.$dateFrom.' date_to '.$dateTo);
+
         $calls = (new ApiClient($token))->calls([
-            'date_from' => '01.03.2022',
-            'date_to'   => '02.03.2022',
+            'date_from' => $dateFrom,
+            'date_to'   => $dateTo,
         ]);
 
         foreach ($calls as $call) {
-//dd($call);
-//            try {
+
+            try {
                 DB::connection('sipout')
                     ->table('sipout_calls')
                     ->insert([
@@ -60,11 +67,25 @@ class Calls extends Command
                         "callid" => $call->callid,
                         "ts"     => $call->ts,
                     ]);
-//            } catch (\Exception $exception) {
-//
-//                dd($exception->getMessage());
-//            }
+            } catch (\Exception $exception) {
+
+                dd($exception->getMessage());
+            }
         }
+
+        $latestDate = DB::connection('sipout')
+            ->table('sipout_calls')
+            ->latest('id')
+            ->first()
+            ->date;
+
+        $latestDate = $latestDate = explode(' ', $latestDate)[0];
+
+        Cache::put('sipout_date_from', $latestDate);
+        Cache::put('sipout_date_to', Carbon::parse($latestDate)->addMonth()->format('d.m.Y'));
+
+        Log::info(__METHOD__.' > next dates > date_from :'.Cache::get('sipout_date_from').' date_to '.Cache::get('sipout_date_to'));
+        Log::info(__METHOD__.' > end');
 
         return 0;
     }
