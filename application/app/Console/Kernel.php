@@ -20,7 +20,7 @@ class Kernel extends ConsoleKernel
          $schedule->command('avito:ads-calls')->everyTenMinutes();
          $schedule->command('avito:ads-service')->everyTenMinutes();
 
-         $schedule->command('sipout:calls')->everyTenMinutes();
+         $schedule->command('sipout:calls')->everyFiveMinutes();
     }
 
     /**
