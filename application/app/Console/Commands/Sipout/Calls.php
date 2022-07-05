@@ -87,7 +87,7 @@ class Calls extends Command
         Cache::put('sipout_date_from', $latestDate);
         Cache::put('sipout_date_to', Carbon::parse($latestDate)->addMonth()->format('d.m.Y'));
 
-        Log::info(__METHOD__.' > next dates > date_from :'.Cache::get('sipout_date_from').' date_to '.Cache::get('sipout_date_to'));
+        Log::info(__METHOD__.' > date_from : '.Cache::get('sipout_date_from').' date_to : '.Cache::get('sipout_date_to'));
         Log::info(__METHOD__.' > end');
 
         return 0;
