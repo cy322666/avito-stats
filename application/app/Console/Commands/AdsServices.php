@@ -72,7 +72,7 @@ class AdsServices extends Command
 
                         try {
 
-                            if (\App\Models\AdsServices::query()
+                            if (!\App\Models\AdsServices::query()
                                 ->where('ads_id', $adId)
                                 ->where('vas_id', '!=', $service->vas_id)
                                 ->where('finish_time', '!=', $service->finish_time)
@@ -88,10 +88,10 @@ class AdsServices extends Command
 
                                 if ($service->vas_id == 'xl' || $service->vas_id == 'highlight') {
 
-                                    $vas = $apiClient->adsVas($account->account_id, $adId)->vas->$adId;
+                                    $vas = $apiClient->adsVas($account->account_id, $adId)->data->vas->$adId;
                                 } else {
 
-                                    $vas = $apiClient->adsPackages($account->account_id, $adId)->packages->$adId;
+                                    $vas = $apiClient->adsPackages($account->account_id, $adId)->data->packages->$adId;
                                 }
 
                                 foreach ($vas as $key => $v) {
