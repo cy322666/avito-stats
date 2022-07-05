@@ -41,7 +41,7 @@ class Calls extends Command
         $dateFrom = Cache::get('sipout_date_from') ?? Carbon::create('2022', '01', '01')->format('d.m.Y');
         $dateTo   = Cache::get('sipout_date_to') ?? Carbon::create('2022', '01', '07')->format('d.m.Y');
 
-        Log::info(__METHOD__.' > date_from : '.$dateFrom.' date_to '.$dateTo);
+        Log::info(__METHOD__.' > date_from : '.$dateFrom.' date_to : '.$dateTo);
 
         $calls = (new ApiClient($token))->calls([
             'date_from' => $dateFrom,
@@ -69,7 +69,7 @@ class Calls extends Command
                     ]);
             } catch (\Exception $exception) {
 
-                dd($exception->getMessage());
+                Log::alert(__METHOD__.' : '.$exception->getMessage());
             }
         }
 
@@ -87,7 +87,7 @@ class Calls extends Command
         Cache::put('sipout_date_from', $latestDate);
         Cache::put('sipout_date_to', Carbon::parse($latestDate)->addDays(7)->format('d.m.Y'));
 
-        Log::info(__METHOD__.' > date_from : '.Cache::get('sipout_date_from').' date_to : '.Cache::get('sipout_date_to'));
+        Log::info(__METHOD__.' next > date_from : '.Cache::get('sipout_date_from').' date_to : '.Cache::get('sipout_date_to'));
         Log::info(__METHOD__.' > end');
 
         return 0;
