@@ -38,8 +38,8 @@ class Calls extends Command
             ->first()
                 ->token;
 
-        $dateFrom = Cache::get('sipout_date_from') ?? Carbon::create('2020', '01', '01')->format('d.m.Y');
-        $dateTo   = Cache::get('sipout_date_to') ?? Carbon::create('2020', '02', '01')->format('d.m.Y');
+        $dateFrom = Cache::get('sipout_date_from') ?? Carbon::create('2022', '01', '01')->format('d.m.Y');
+        $dateTo   = Cache::get('sipout_date_to') ?? Carbon::create('2022', '01', '07')->format('d.m.Y');
 
         Log::info(__METHOD__.' > date_from : '.$dateFrom.' date_to '.$dateTo);
 
@@ -85,7 +85,7 @@ class Calls extends Command
         }
 
         Cache::put('sipout_date_from', $latestDate);
-        Cache::put('sipout_date_to', Carbon::parse($latestDate)->addMonth()->format('d.m.Y'));
+        Cache::put('sipout_date_to', Carbon::parse($latestDate)->addDays(7)->format('d.m.Y'));
 
         Log::info(__METHOD__.' > date_from : '.Cache::get('sipout_date_from').' date_to : '.Cache::get('sipout_date_to'));
         Log::info(__METHOD__.' > end');

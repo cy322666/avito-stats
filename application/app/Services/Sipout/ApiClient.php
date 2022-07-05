@@ -23,7 +23,7 @@ class ApiClient
                     'key' => $this->token,
                     'method' => 'call_stat',
                     'action' => 'get_list',
-                    'ds' => $dates['date_from'],//01.03.2022
+                    'ds' => $dates['date_from'],
                     'de' => $dates['date_to'],
                 ],
         ]);
