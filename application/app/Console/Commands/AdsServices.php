@@ -64,7 +64,7 @@ class AdsServices extends Command
 
                 $data = $apiClient->adsServices($account->account_id, $adId);
 ;
-                $services = $data->data->vas;
+                $services = $data->data->vas ?? [];
 
                 if (count($services) > 0) {
 
