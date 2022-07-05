@@ -39,7 +39,7 @@ class AdsServices extends Command
         $today = Carbon::now()->format('Y-m-d');
 
         $account = Ads::query()
-                ->where('account_id', Account::query()->first()->account_id)
+                ->where('account_id', Account::query()->find(1)->account_id)
                 ->where('services_updated_at', '!=', $today)
                 ->first()
             ?? Account::query()->find(2);
