@@ -50,6 +50,13 @@ class AdsStats extends Command
             new FileStorage(storage_path('avito/'))
         );
 
+        if (!$account) {
+
+            Log::info(__METHOD__.' > end > no account');
+
+            return 1;
+        }
+
         $adIds = Ads::query()
             ->where('stats_updated_at', '<', $today)
             ->orWhere('stats_updated_at', null)

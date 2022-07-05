@@ -42,7 +42,6 @@ class Ads extends Command
         $account = Account::query()
             ->where('name', 'avito')
             ->where('last_update', '!=', $today)
-            ->orWhere('last_update', null)
             ->first();
 
         if (!$account) {

@@ -44,6 +44,13 @@ class AdsCalls extends Command
                 ->first()
             ?? Account::query()->find(2);
 
+        if (!$account) {
+
+            Log::info(__METHOD__.' > end > no account');
+
+            return 1;
+        }
+
         $apiClient = new ApiClient(
             $account->client_id,
             $account->token,
