@@ -71,15 +71,37 @@ class AdsServices extends Command
                     foreach ($services as $service) {
 
                         try {
-                            \App\Models\AdsServices::query()
-                                ->updateOrCreate([
-                                    'ads_id' => $adId,
-                                ],[
-                                    'finish_time' => $service->finish_time,
-                                    'schedule' => json_encode($service->schedule),
-                                    'vas_id'   => $service->vas_id,
-                                ]);
 
+                            if (\App\Models\AdsServices::query()
+                                ->where('ads_id'. $adId)
+                                ->where('finish_time', '!=', $service->finish_time)
+                                ->first()) {
+
+                                $model = \App\Models\AdsServices::query()
+                                    ->create([
+                                        'ads_id' => $adId,
+                                        'finish_time' => $service->finish_time,
+                                        'schedule' => json_encode($service->schedule),
+                                        'vas_id'   => $service->vas_id,
+                                    ]);
+
+                                if ($service->vas_id == 'xl' || $service->vas_id == 'highlight') {
+
+                                    $vas = $apiClient->adsVas($account->account_id, $adId)->vas->$adId;
+                                } else {
+
+                                    $vas = $apiClient->adsPackages($account->account_id, $adId)->packages->$adId;
+                                }
+
+                                foreach ($vas as $key => $v) {
+
+                                    if ($key == $service->vas_id) {
+
+                                        $model->price = $v;
+                                        $model->save();
+                                    }
+                                }
+                            }
                         } catch (\Exception $exception) {
 
                             Log::alert(__METHOD__.' '.$exception->getMessage());

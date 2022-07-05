@@ -16,5 +16,6 @@ class AdsServices extends Model
         'schedule',
         'vas_id',
         'ads_id',
+        'price',
     ];
 }

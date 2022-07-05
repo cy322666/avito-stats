@@ -79,6 +79,24 @@ class ApiClient
         return $this->httpСlient->sendRequest('core/v1/accounts/'.$userId.'/items/'.$adId.'/');
     }
 
+    public function adsVas(int $userId, int $adId): \stdClass
+    {
+        return $this->httpСlient->sendRequest('core/v1/accounts/'.$userId.'/price/vas', 'POST', [
+            'item_ids' => [
+                $adId,
+            ]
+        ]);
+    }
+
+    public function adsPackages(int $userId, int $adId): \stdClass
+    {
+        return $this->httpСlient->sendRequest('core/v1/accounts/'.$userId.'/price/vas_package', 'POST', [
+            'item_ids' => [
+                $adId,
+            ]
+        ]);
+    }
+
     public function adsCalls(int $userId, array $adsIds, array $dates): \stdClass
     {
         return $this->httpСlient->sendRequest('core/v1/accounts/'.$userId.'/calls/stats/', 'POST', [
