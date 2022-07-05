@@ -15,12 +15,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('avito:ads')->everyTenMinutes();
-         $schedule->command('avito:ads-stats')->everyTenMinutes();
-         $schedule->command('avito:ads-calls')->everyTenMinutes();
-         $schedule->command('avito:ads-service')->everyTenMinutes();
+         $schedule->command('avito:ads')->everyMinute();
+         $schedule->command('avito:ads-stats')->everyMinute();
+         $schedule->command('avito:ads-calls')->everyMinute();
+         $schedule->command('avito:ads-service')->everyMinute();
 
-         $schedule->command('sipout:calls')->everyTenMinutes();
+         $schedule->command('sipout:calls')->everyMinute();
     }
 
     /**
