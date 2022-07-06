@@ -38,24 +38,31 @@ class AdsStats extends Command
 
         $today = Carbon::now()->format('Y-m-d');
 
-        $account = Ads::query()
-                ->where('account_id', Account::query()->find(1)->account_id)
+        $account = Ads::query()->find(1);
+
+        if (!Ads::query()
+                ->where('account_id', $account->account_id)
                 ->where('stats_updated_at', '!=', $today)
-                ->first()
-            ?? Account::query()->find(2);
+                ->first()) {
+
+            $account = Ads::query()->find(2);
+
+            if (!Ads::query()
+                ->where('account_id', $account->account_id)
+                ->where('stats_updated_at', '!=', $today)
+                ->first()) {
+
+                Log::info(__METHOD__.' > end > no account');
+
+                return 0;
+            }
+        }
 
         $apiClient = new ApiClient(
             $account->client_id,
             $account->token,
             new FileStorage(storage_path('avito/'))
         );
-
-        if (!$account) {
-
-            Log::info(__METHOD__.' > end > no account');
-
-            return 1;
-        }
 
         $adIds = Ads::query()
             ->where('stats_updated_at', '<', $today)

@@ -36,19 +36,24 @@ class AdsServices extends Command
     {
         Log::info(__METHOD__.' > start');
 
-        $today = Carbon::now()->format('Y-m-d');
+        $account = Ads::query()->find(1);
 
-        $account = Ads::query()
-                ->where('account_id', Account::query()->find(1)->account_id)
+        if (!Ads::query()
+            ->where('account_id', $account->account_id)
+            ->where('services_updated_at', '!=', $today)
+            ->first()) {
+
+            $account = Ads::query()->find(2);
+
+            if (!Ads::query()
+                ->where('account_id', $account->account_id)
                 ->where('services_updated_at', '!=', $today)
-                ->first()
-            ?? Account::query()->find(2);
+                ->first()) {
 
-        if (!$account) {
+                Log::info(__METHOD__.' > end > no account');
 
-            Log::info(__METHOD__.' > end > no account');
-
-            return 1;
+                return 0;
+            }
         }
 
         $apiClient = new ApiClient(
