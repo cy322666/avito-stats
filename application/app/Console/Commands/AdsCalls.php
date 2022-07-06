@@ -38,14 +38,14 @@ class AdsCalls extends Command
 
         $today = Carbon::now()->format('Y-m-d');
 
-        $account = Ads::query()->find(1)->first;
+        $account = Account::query()->find(1)->first();
 
         if (!Ads::query()
             ->where('account_id', $account->account_id)
             ->where('calls_updated_at', '!=', $today)
             ->first()) {
 
-            $account = Ads::query()->find(2)->first;;
+            $account = Account::query()->find(2)->first();
 
             if (!Ads::query()
                 ->where('account_id', $account->account_id)
