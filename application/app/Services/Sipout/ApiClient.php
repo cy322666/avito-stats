@@ -32,4 +32,23 @@ class ApiClient
 
         return $response->data->list ?? [];
     }
+
+    public function managers()
+    {
+        $response = (new \GuzzleHttp\Client())
+            ->request('GET', 'https://lk.sipout.net/userapi/', [
+                'headers' => [
+                    'content-type' => 'application/json'
+                ],
+                'query' => [
+                    'key' => $this->token,
+                    'method' => 'peer',
+                    'action' => 'list',
+                ],
+            ]);
+
+        $response = json_decode($response->getBody()->getContents());
+
+        return $response->data->list ?? [];
+    }
 }
