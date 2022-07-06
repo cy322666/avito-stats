@@ -42,14 +42,14 @@ class AdsServices extends Command
 
         if (!Ads::query()
             ->where('account_id', $account->account_id)
-            ->where('services_updated_at', '!=', $today)
+            ->where('services_updated_at', '<', $today)
             ->first()) {
 
             $account = Account::query()->find(2)->first();
 
             if (!Ads::query()
                 ->where('account_id', $account->account_id)
-                ->where('services_updated_at', '!=', $today)
+                ->where('services_updated_at', '<', $today)
                 ->first()) {
 
                 Log::info(__METHOD__.' > end > no account');
