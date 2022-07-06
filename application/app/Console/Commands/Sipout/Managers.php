@@ -43,7 +43,7 @@ class Managers extends Command
 
             try {
                 DB::connection('sipout')
-                    ->table('managers')
+                    ->table('sipout_managers')
                     ->insert([
                         'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                         "number" => $manager->number,
