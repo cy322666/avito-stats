@@ -36,14 +36,16 @@ class AdsServices extends Command
     {
         Log::info(__METHOD__.' > start');
 
-        $account = Ads::query()->find(1);
+        $today = Carbon::now()->format('Y-m-d');
+
+        $account = Ads::query()->find(1)->first;
 
         if (!Ads::query()
             ->where('account_id', $account->account_id)
             ->where('services_updated_at', '!=', $today)
             ->first()) {
 
-            $account = Ads::query()->find(2);
+            $account = Ads::query()->find(2)->first;;
 
             if (!Ads::query()
                 ->where('account_id', $account->account_id)
