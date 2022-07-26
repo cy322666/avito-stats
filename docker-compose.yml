@@ -49,6 +49,16 @@ services:
             POSTGRES_USER: root
             POSTGRES_PASSWORD: pQLkm8NOkS0gOBox
             POSTGRES_DB: sipout
+    postgresql_mc:
+        image: postgres:9.6.21-alpine
+        ports:
+            - "5429:5432"
+        networks:
+            - cluster
+        environment:
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: pQLkm8NOkS0gOBox
+            POSTGRES_DB: mc
 networks:
     cluster:
         name: cluster

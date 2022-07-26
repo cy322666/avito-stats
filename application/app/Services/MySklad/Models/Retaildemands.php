@@ -3,13 +3,13 @@
 namespace App\Services\MySklad\Models;
 
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
-class Products extends Base
+class Retaildemands extends Base
 {
-    const URL = 'product';
+    const URL = 'retaildemand';
 
     protected string $base_url;
+    protected string $token;
     private Base $base;
 
     public function __construct(Base $base)
@@ -18,23 +18,22 @@ class Products extends Base
         $this->base_url = $base->base_url;
     }
 
-    public function all(int $limit, int $offset)
+    public function raw($href)
+    {
+        $response = Http::withHeaders($this->getHeaders())->get($href);
+
+        return $response->json();
+    }
+
+    public function all($limit = 1000, $offset = 0)
     {
         $array = [];
 
-        $query = '?limit='.$limit.'&offset='.$offset;
+//        $query = '?limit='.$limit.'&offset='.$offset;
 
-        $response = Http::withHeaders($this->getHeaders())->get($this->base_url.self::URL.$query);
+//        $response = Http::withHeaders($this->getHeaders())->get($this->base_url.self::URL.$query);
 
-        $meta = $response->json()['meta'];
-
-        $count = intval(ceil($meta['size'] / $limit));
-
-        Log::info(__METHOD__.' > $count '.$count);
-
-        for ($i = 0; $i < 5; $i++) {
-
-            Log::info(__METHOD__.' > page : '.$i.' $offset '.$offset);
+        for ($i = 0; $i < 2; $i++) {
 
             $query = '?limit='.$limit.'&offset='.$offset;
 
@@ -44,8 +43,6 @@ class Products extends Base
 
             $array = array_merge($array, $response->json()['rows']);
         }
-
-        Log::info(__METHOD__.' > end');
 
         return [
             'array'  => $array,

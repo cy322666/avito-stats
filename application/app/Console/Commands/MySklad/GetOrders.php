@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands\MySklad;
 
+use App\Models\Account;
 use App\Services\MySklad\Client;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class GetOrders extends Command
@@ -13,7 +15,7 @@ class GetOrders extends Command
      *
      * @var string
      */
-    protected $signature = 'mysklad:orders';
+    protected $signature = 'mс:orders';
 
     /**
      * The console command description.
@@ -29,79 +31,82 @@ class GetOrders extends Command
      */
     public function handle()
     {
-        $apiClient = new Client('8a310ef18f966a55a503b0bddb18e379834fabdb');
+        Log::info(__METHOD__. ' start ');
 
-        $statuses = $apiClient->service
-            ->orders()
-            ->statuses()['states'];
+        $apiClient = new Client(Account::whereName('mc')->first()->token);
 
-        foreach ($statuses as $status) {
+        $sales = $apiClient->service
+            ->retaildemands()
+            ->all();
 
-            $orders = $apiClient->service
-                ->orders()
-                ->all(
-                    1000,
-                    0,
-                    'state=' . $status['meta']['href'],
-                );
+        try {
 
-            if (count($orders['array']) == 0) {
+            foreach ($sales['array'] as $sale) {
 
-                continue;
-            } else {
+                $agent = explode('/', $sale['agent']['meta']['href']);
+                $owner = explode('/', $sale['owner']['meta']['href']);
+                $store = explode('/', $sale['store']['meta']['href']);
+                $retail = explode('/', $sale['retailStore']['meta']['href']);
 
-                foreach ($orders['array'] as $order) {
+                DB::connection('mc')
+                    ->table('mc_orders')
+                    ->insert([
+                        'name'      => $sale['name'],
+                        'moment'    => $sale['moment'],
+                        'applicable'=> $sale['applicable'],
+                        'contragent_uuid' => end($agent),
+                        'checkNumber' => $sale['checkNumber'],
+                        'checkSum'    => $sale['checkSum'],
+                        'code'    => $sale['code'],
+                        'created' => $sale['created'],
+                        'description'    => $sale['description'],
+                        'documentNumber' => $sale['documentNumber'],
+                        'fiscal'         => $sale['fiscal'],
+                        'fiscalPrinterInfo' => $sale['fiscalPrinterInfo'],
+                        'noCashSum'      => $sale['noCashSum'],
+                        'employee_uuid'  => end($owner),
+                        'payedSum'       => $sale['payedSum'],
+                        'prepaymentCashSum'   => $sale['prepaymentCashSum'],
+                        'prepaymentNoCashSum' => $sale['prepaymentNoCashSum'],
+                        'prepaymentQrSum'     => $sale['prepaymentQrSum'],
+                        'qrSum'         => $sale['qrSum'],
+                        'retailStore'   => end($retail),
+                        'sessionNumber' => $sale['sessionNumber'],
+                        'store_uuid'    => end($store),
+                        'sum'    => $sale['sum'],
+                        'vatSum' => $sale['vatSum'],
+                    ]);
 
-                    try {
-                        Order::query()->create([
-                            'href_order' => $order['meta']['href'],
-                            'order_id' => $order['id'],
-                            'updated' => $order['updated'],
-                            'externalCode' => $order['externalCode'],
-                            'moment' => $order['moment'],
-                            'sum' => $order['sum'],
-                            'href' => $order['store']['meta']['href'] ?? null,
-                            'value' => $value,
-                            'name' => $order['attributes'][0]['name'] ?? null,
-                            'created' => $order['created'],
-                            'payedSum' => $order['payedSum'],
-                            'shippedSum' => $order['shippedSum'],
-                            'invoicedSum' => $order['invoicedSum'],
-                            'waitSum' => $order['waitSum'],
-                            'status' => $status['name'],
-                            'href_supply' => $order['supplies'][0]['meta']['href'] ?? null,
-                            'delivery_planned_moment' => $order['deliveryPlannedMoment'] ?? null,
+                $saleId = DB::connection('mc')
+                    ->table('mc_payments')
+                    ->orderByDesc('id')
+                    ->first()->id;
+
+                $positions = $apiClient->service
+                    ->retaildemands()
+                    ->raw($sale['positions']['meta']['href'])['rows'];
+
+                foreach ($positions as $position) {
+
+                    $detail = $apiClient->service
+                        ->retaildemands()
+                        ->raw($position['assortment']['meta']['href']);
+
+                    DB::connection('mc')
+                        ->table('mc_order_positions')
+                        ->insert([
+                            'order_id' => $saleId,
+                            'product_uuid' => $detail['id'],
+                            'name'      => $position['name'],
+                            'code'     => $position['code'],
+                            'salePrices'=> $position['salePrices']['value'],
+                            'buyPrice'  => $position['buyPrice']['value'],
                         ]);
-
-                        $positions = $this->client->service
-                            ->orders()
-                            ->positions($order['id']);
-
-                        foreach ($positions as $position) {
-
-                            OrderPositions::query()->create([
-                                'position_id' => $position['id'],
-                                'order_id' => $order['id'],
-                                'href_order' => $order['meta']['href'],
-                                'href_position' => $position['meta']['href'],
-                                'quantity' => $position['quantity'],
-                                'price' => $position['price'],
-                                'discount' => $position['discount'],
-                                'shipped' => $position['shipped'],
-                                'vat' => $position['vat'],
-                                'inTransit' => $position['inTransit'],
-                                'vatEnabled' => $position['vatEnabled'],
-                                'href_product' => $position['assortment']['meta']['href'] ?? null,
-                            ]);
-                        }
-                    } catch (\Throwable $exception) {
-
-                        Log::alert(__METHOD__ . ' : ' . $exception->getMessage());
-
-                        continue;
-                    }
                 }
             }
+        } catch (\Throwable $exception) {
+
+            Log::alert(__METHOD__ . ' : ' . $exception->getMessage());
         }
 
         return 0;

@@ -5,9 +5,9 @@ namespace App\Services\MySklad\Models;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class Products extends Base
+class Bundles extends Base
 {
-    const URL = 'product';
+    const URL = 'bundle';
 
     protected string $base_url;
     private Base $base;
@@ -30,11 +30,9 @@ class Products extends Base
 
         $count = intval(ceil($meta['size'] / $limit));
 
-        Log::info(__METHOD__.' > $count '.$count);
+        for ($i = 0; $i < $count; $i++) {
 
-        for ($i = 0; $i < 5; $i++) {
-
-            Log::info(__METHOD__.' > page : '.$i.' $offset '.$offset);
+            Log::info(__METHOD__.' > $i : '.$i.' $offset '.$offset);
 
             $query = '?limit='.$limit.'&offset='.$offset;
 

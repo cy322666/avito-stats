@@ -29,5 +29,12 @@
       <jdbc-url>jdbc:postgresql://45.10.246.54:5430/sipout</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="mc@localhost" uuid="45ee38bd-2094-4ae8-a5cb-cdd12ecff638">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5429/mc</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

@@ -46,6 +46,13 @@ class Contragents extends Base
         ];
     }
 
+    public function state(string $href)
+    {
+        return Http::withHeaders($this->getHeaders())
+            ->get($href)
+            ->json();
+    }
+
     private static function checkSize($size, $current_cursor): bool
     {
         return (bool)$size > $current_cursor;
