@@ -55,7 +55,6 @@ class GetClients extends Command
                             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
                             'uuid'  => $client['id'],
                             'group' => isset($client['tags']) ? json_encode($client['tags']) : null,
-                            'code'  => $client['externalCode'],
                             'name'  => $client['name'],
                             'full_name' => $client['legalTitle'] ?? null,
                             'address'   => $client['legalAddress'] ?? null,
