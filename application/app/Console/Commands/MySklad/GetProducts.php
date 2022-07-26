@@ -57,7 +57,7 @@ class GetProducts extends Command
                             'uuid' => $sku['id'],
                             'name' => $sku['name'],
                             'group'=> $sku['pathName'] ?? null,
-                            'code' => $sku['code'] ?? null,
+                            'code' => $sku['code'] ?? 0,
                             'archived' => $sku['archived'],
                             'article'  => $sku['article'] ?? null,
                             'type' => 'Товар',
@@ -65,7 +65,7 @@ class GetProducts extends Command
 
                 } catch (\Throwable $exception) {
 
-                    echo $exception->getMessage();echo "\n";
+                    Log::info($exception->getMessage());
                 }
             }
         }
