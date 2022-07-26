@@ -78,7 +78,7 @@ class GetTimeline extends Command
 
                 if (Carbon::parse($lastDate) == Carbon::now()) {
 
-                    break;
+                    break 2;
                 } else
                     $lastDate = Carbon::parse($lastDate)->addDay()->format('Y-m-d');
             }
