@@ -50,6 +50,12 @@ class GetTimeline extends Command
 
             for (;;) {
 
+                if (Carbon::parse($lastDate)->format('Y-m-d') == Carbon::now()->format('Y-m-d')) {
+
+                    continue 2;
+                } else
+                    $lastDate = Carbon::parse($lastDate)->addDay()->format('Y-m-d');
+
                 $skus = $apiClient->service
                     ->stocks()
                     ->getByMoment($stockId->uuid, $lastDate.' 13:00:00');
@@ -75,12 +81,6 @@ class GetTimeline extends Command
                             'date'     => $lastDate,
                         ]);
                 }
-
-                if (Carbon::parse($lastDate) == Carbon::now()) {
-
-                    break 2;
-                } else
-                    $lastDate = Carbon::parse($lastDate)->addDay()->format('Y-m-d');
             }
         }
         Log::info(__METHOD__. ' stop ');
