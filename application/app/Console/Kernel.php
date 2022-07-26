@@ -18,9 +18,9 @@ class Kernel extends ConsoleKernel
          $schedule->command('avito:ads')->everyTwoHours();
          $schedule->command('avito:ads-stats')->everyTwoHours();
          $schedule->command('avito:ads-calls')->everyTwoHours();
-         $schedule->command('avito:ads-service')->everyTwoMinutes();
+         $schedule->command('avito:ads-service')->everyTwoHours();
 
-         $schedule->command('sipout:calls')->everyTwoMinutes();
+         $schedule->command('sipout:calls')->everyTwoHours();
 
          $schedule->command('mc:timelines')->everyTenMinutes();
     }
