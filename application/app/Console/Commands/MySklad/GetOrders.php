@@ -55,7 +55,7 @@ class GetOrders extends Command
                         'moment'    => $sale['moment'],
                         'applicable'=> $sale['applicable'],
                         'contragent_uuid' => end($agent),
-                        'checkNumber' => $sale['checkNumber'],
+                        'checkNumber' => $sale['checkNumber'] ?? null,
                         'checkSum'    => $sale['checkSum'],
                         'code'    => $sale['code'],
                         'created' => $sale['created'],
