@@ -23,6 +23,7 @@ class Kernel extends ConsoleKernel
          $schedule->command('sipout:calls')->everyTwoHours();
 
          $schedule->command('mc:timelines')->everyTenMinutes();
+         $schedule->command('mс:orders')->everyTenMinutes();
     }
 
     /**
