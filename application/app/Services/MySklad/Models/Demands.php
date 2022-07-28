@@ -32,7 +32,7 @@ class Demands extends Base
 //
 //        Log::info(__METHOD__.' > count '.$count);
 
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; ; $i++) {
 
             Log::info(__METHOD__.' > $i : '.$i.' $offset '.$offset);
 
@@ -42,7 +42,11 @@ class Demands extends Base
 
             $offset = $limit + $offset;
 
-            $array = array_merge($array, $response->json()['rows']);
+            if (count($response->json()['rows']) > 0) {
+
+                $array = array_merge($array, $response->json()['rows']);
+            } else
+                break;
         }
 
         Log::info(__METHOD__.' > end');
