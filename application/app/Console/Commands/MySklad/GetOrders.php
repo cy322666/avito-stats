@@ -6,6 +6,7 @@ use App\Models\Account;
 use App\Services\MySklad\Client;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -38,7 +39,7 @@ class GetOrders extends Command
 
         $sales = $apiClient->service
             ->retaildemands()
-            ->all();
+            ->all(1000, Cache::get('mc_orders_offset') ?? 1);
 
         foreach ($sales['array'] as $sale) {
 
@@ -117,6 +118,8 @@ class GetOrders extends Command
                 continue;
             }
         }
+
+        Cache::put('mc_orders_offset', $sales['offset']);
 
         Log::info(__METHOD__. ' end ');
 
