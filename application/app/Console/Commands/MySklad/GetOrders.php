@@ -4,6 +4,7 @@ namespace App\Console\Commands\MySklad;
 
 use App\Models\Account;
 use App\Services\MySklad\Client;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -15,7 +16,7 @@ class GetOrders extends Command
      *
      * @var string
      */
-    protected $signature = 'mс:orders';
+    protected $signature = 'mc:orders';
 
     /**
      * The console command description.
@@ -33,7 +34,7 @@ class GetOrders extends Command
     {
         Log::info(__METHOD__. ' start ');
 
-        $apiClient = new Client(Account::whereName('mc')->first()->token);
+        $apiClient = new Client(Account::query()->where('name', 'mc')->first()->token);
 
         $sales = $apiClient->service
             ->retaildemands()
@@ -51,34 +52,37 @@ class GetOrders extends Command
                 DB::connection('mc')
                     ->table('mc_orders')
                     ->insert([
+                        'uuid' => $sale['id'],
+                        'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                        'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
                         'name'      => $sale['name'],
                         'moment'    => $sale['moment'],
                         'applicable'=> $sale['applicable'],
                         'contragent_uuid' => end($agent),
                         'checkNumber' => $sale['checkNumber'] ?? null,
-                        'checkSum'    => $sale['checkSum'],
-                        'code'    => $sale['code'],
-                        'created' => $sale['created'],
-                        'description'    => $sale['description'],
-                        'documentNumber' => $sale['documentNumber'],
-                        'fiscal'         => $sale['fiscal'],
-                        'fiscalPrinterInfo' => $sale['fiscalPrinterInfo'],
-                        'noCashSum'      => $sale['noCashSum'],
+                        'checkSum'    => $sale['checkSum'] ?? null,
+                        'code'    => $sale['externalCode'] ?? null,
+                        'created' => $sale['created'] ?? null,
+                        'description'    => $sale['description'] ?? null,
+                        'documentNumber' => $sale['documentNumber'] ?? null,
+                        'fiscal'         => $sale['fiscal'] ?? null,
+                        'fiscalPrinterInfo' => $sale['fiscalPrinterInfo'] ?? null,
+                        'noCashSum'      => $sale['noCashSum'] ?? null,
                         'employee_uuid'  => end($owner),
-                        'payedSum'       => $sale['payedSum'],
-                        'prepaymentCashSum'   => $sale['prepaymentCashSum'],
-                        'prepaymentNoCashSum' => $sale['prepaymentNoCashSum'],
-                        'prepaymentQrSum'     => $sale['prepaymentQrSum'],
-                        'qrSum'         => $sale['qrSum'],
+                        'payedSum'       => $sale['payedSum'] ?? null,
+                        'prepaymentCashSum'   => $sale['prepaymentCashSum'] ?? null,
+                        'prepaymentNoCashSum' => $sale['prepaymentNoCashSum'] ?? null,
+                        'prepaymentQrSum'     => $sale['prepaymentQrSum'] ?? null,
+                        'qrSum'         => $sale['qrSum'] ?? null,
                         'retailStore'   => end($retail),
-                        'sessionNumber' => $sale['sessionNumber'],
+                        'sessionNumber' => $sale['sessionNumber'] ?? null,
                         'store_uuid'    => end($store),
-                        'sum'    => $sale['sum'],
-                        'vatSum' => $sale['vatSum'],
+                        'sum'    => $sale['sum'] ?? null,
+                        'vatSum' => $sale['vatSum'] ?? null,
                     ]);
 
                 $saleId = DB::connection('mc')
-                    ->table('mc_payments')
+                    ->table('mc_orders')
                     ->orderByDesc('id')
                     ->first()->id;
 
@@ -95,12 +99,14 @@ class GetOrders extends Command
                     DB::connection('mc')
                         ->table('mc_order_positions')
                         ->insert([
+                            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+                            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
                             'order_id' => $saleId,
                             'product_uuid' => $detail['id'],
-                            'name'      => $position['name'],
-                            'code'     => $position['code'],
-                            'salePrices'=> $position['salePrices']['value'],
-                            'buyPrice'  => $position['buyPrice']['value'],
+                            'name'      => $detail['name'],
+                            'code'      => $detail['code'],
+                            'salePrices'=> $detail['salePrices'][0]['value'],
+                            'buyPrice'  => $detail['buyPrice']['value'],
                         ]);
                 }
 
