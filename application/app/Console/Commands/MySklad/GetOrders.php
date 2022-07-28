@@ -39,9 +39,9 @@ class GetOrders extends Command
             ->retaildemands()
             ->all();
 
-        try {
+        foreach ($sales['array'] as $sale) {
 
-            foreach ($sales['array'] as $sale) {
+            try {
 
                 $agent = explode('/', $sale['agent']['meta']['href']);
                 $owner = explode('/', $sale['owner']['meta']['href']);
@@ -103,11 +103,16 @@ class GetOrders extends Command
                             'buyPrice'  => $position['buyPrice']['value'],
                         ]);
                 }
-            }
-        } catch (\Throwable $exception) {
 
-            Log::alert(__METHOD__ . ' : ' . $exception->getMessage());
+            } catch (\Throwable $exception) {
+
+                Log::alert(__METHOD__ . ' : ' . $exception->getMessage());
+
+                continue;
+            }
         }
+
+        Log::info(__METHOD__. ' end ');
 
         return 0;
     }
