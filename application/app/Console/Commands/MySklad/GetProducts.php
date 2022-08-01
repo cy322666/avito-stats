@@ -7,6 +7,7 @@ use App\Models\MySklad\Skus;
 use App\Services\MySklad\Client;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -41,7 +42,7 @@ class GetProducts extends Command
             ->products()
             ->all(
                 1000,
-                0,
+                Cache::get('mc_skus_offset') ?? 0,
             );
 
         if (count($skus['array']) > 0) {
@@ -69,6 +70,8 @@ class GetProducts extends Command
                 }
             }
         }
+        Cache::put('mc_skus_offset', $skus['offset']);
+
         Log::info(__METHOD__. ' stop ');
 
         return 0;
