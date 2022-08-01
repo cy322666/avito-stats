@@ -7,6 +7,7 @@ use App\Models\MySklad\Skus;
 use App\Services\MySklad\Client;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -41,7 +42,7 @@ class GetClients extends Command
             ->contragents()
             ->all(
                 500,
-                0
+                Cache::get('mc_clients_offset') ?? 0,
             );
         if (count($clients['array']) > 0) {
 
@@ -90,6 +91,8 @@ class GetClients extends Command
                 }
             }
         }
+        Cache::put('mc_clients_offset', $clients['offset']);
+
         Log::info(__METHOD__. ' stop ');
 
         return 0;

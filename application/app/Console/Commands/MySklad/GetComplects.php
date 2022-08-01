@@ -7,6 +7,7 @@ use App\Models\MySklad\Skus;
 use App\Services\MySklad\Client;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -41,7 +42,7 @@ class GetComplects extends Command
             ->bundles()
             ->all(
                 1000,
-                0,
+                Cache::get('mc_complects_offset') ?? 0,
             );
 
         if (count($skus['array']) > 0) {
@@ -65,10 +66,14 @@ class GetComplects extends Command
 
                 } catch (\Throwable $exception) {
 
-                    dd($exception->getMessage());
+                    Log::info($exception->getMessage());
                 }
             }
         }
+
+        Cache::put('mc_complects_offset', $skus['offset']);
+
+        Log::info(__METHOD__. ' stop ');
 
         return 0;
     }
