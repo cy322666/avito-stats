@@ -24,6 +24,10 @@ class Kernel extends ConsoleKernel
 
          $schedule->command('mс:timelines')->everyTenMinutes();
          $schedule->command('mc:orders')->everyTenMinutes();
+         $schedule->command('mс:clients')->everyTenMinutes();
+         $schedule->command('mс:skus-complects')->everyTenMinutes();
+         $schedule->command('mс:skus-products')->everyTenMinutes();
+         $schedule->command('mс:skus-variants')->everyTenMinutes();
     }
 
     /**
