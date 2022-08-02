@@ -87,13 +87,13 @@ class GetClients extends Command
 
                 } catch (\Throwable $exception) {
 
-                    dd($exception->getMessage().' '.$exception->getLine());
+                    Log::info(__METHOD__.' : '.$exception->getMessage().' '.$exception->getLine());
                 }
             }
         }
         Cache::put('mc_clients_offset', $clients['offset']);
 
-        Log::info(__METHOD__. ' stop ');
+        Log::info(__METHOD__. ' stop offset : '.$clients['offset']);
 
         return 0;
     }
